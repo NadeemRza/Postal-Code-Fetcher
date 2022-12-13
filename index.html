@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Postal API</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <label for="pincode">Enter a pincode</label>
+      <input type="number" id="pincode" name="pincode" maxlength="6" />
+      <h2>
+        <span class="pincodeDetail">Please Enter A Pincode</span>
+      </h2>
+      <button onclick="fetchPincode()">Submit</button>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Branch Type</th>
+            <th>Delivery Status</th>
+            <th>Circle</th>
+            <th>District</th>
+            <th>Division</th>
+            <th>Region</th>
+            <th>Block</th>
+          </tr>
+        </thead>
+        <tbody class="tbody"></tbody>
+      </table>
+    </div>
+    <script>
+      async function fetchPincode() {
+          let input = document.getElementById('pincode')
+          let val = input.value;
+
+          let pcd = document.querySelector('.pincodeDetail');
+          pcd.innerText = "Pincode Entered Is:  " + val;
+
+          let url = `https://api.postalpincode.in/pincode/${val}`;
+
+          const res = await fetch(url)
+          const [{PostOffice}] = await res.json();
+
+          let tableData = "";
+
+          PostOffice.map((v) => {
+              tableData += `<tr>
+                  <td>${v.Name}</td>
+                  <td>${v.BranchType}</td>
+                  <td>${v.DeliveryStatus}</td>
+                  <td>${v.Circle}</td>
+                  <td>${v.District}</td>
+                  <td>${v.Division}</td>
+                  <td>${v.Region}</td>
+                  <td>${v.Block}</td>
+                  </tr>`;
+              })
+
+              document.querySelector('.tbody').innerHTML = tableData;
+            }
+    </script>
+  </body>
+</html>
